@@ -41,6 +41,28 @@ const loadCategoryVideos = (id) =>{
         })
 }
 
+// details function
+const cardDetails = async (id)=>{
+    const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/video/${id}`)
+    const data = await res.json()
+    showDetails(data.video)
+}
+
+// show details
+const showDetails = (video) =>{
+    console.log(video)
+    const detailsContainer = document.getElementById('details-container')
+    detailsContainer.innerHTML =   `
+        <img src = ${video.thumbnail}/>
+        <p>${video.description}</p>
+    `
+    // way-1
+    // document.getElementById('showModal').click()
+
+    // way-2
+    document.getElementById('customModal').showModal()
+}
+
 // display data
 const displayCategories = (categories) =>{
     const categoryContainer = document.getElementById('categories');
@@ -72,6 +94,7 @@ const displayVideos = (videos) =>{
         videoContainer.classList.add('grid')
     }
     videos.forEach(item => {
+        // console.log(item)
     const div = document.createElement('div')
         div.innerHTML = `
         
@@ -97,8 +120,9 @@ const displayVideos = (videos) =>{
                 
                 </div>
                 <p>${item.others.views} views</p>
-            </div>
-        </div>
+                </div>
+                </div>
+                <button onclick = "cardDetails('${item.video_id}')" class = 'w-full bg-red-500 my-4 py-2 font-semibold text-white'>Details</button>
         </div>
         `
         videoContainer.appendChild(div)
