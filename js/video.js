@@ -7,6 +7,14 @@ function getTimeString(time){
     return `${hour} h ${minute} m ${remainingSecond} s`;
 }
 
+// active button
+const removeActiveButton = () =>{
+    const button = document.getElementsByClassName('category-btn')
+    for ( btn of button ){
+        btn.classList.remove('active')
+    }
+}
+
 // load Data
 const buttonUrl = 'https://openapi.programming-hero.com/api/phero-tube/categories';
     fetch(buttonUrl)
@@ -25,7 +33,12 @@ const videoUrl = 'https://openapi.programming-hero.com/api/phero-tube/videos';
 const loadCategoryVideos = (id) =>{
     fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
         .then(res => res.json())
-        .then(data => displayVideos(data.category))
+        .then(data => {
+            removeActiveButton()
+            const activeBtn = document.getElementById(`btn-${id}`)
+            activeBtn.classList.add("active")
+            displayVideos(data.category)
+        })
 }
 
 // display data
@@ -34,7 +47,7 @@ const displayCategories = (categories) =>{
     categories.forEach( item => {
         const buttonContainer = document.createElement('div')
         buttonContainer.innerHTML = `
-            <button onclick = 'loadCategoryVideos(${item.category_id})' class = 'btn'>
+            <button id = 'btn-${item.category_id}' onclick = 'loadCategoryVideos(${item.category_id})' class = 'btn category-btn'>
                 ${item.category}
             </button>
         `
@@ -45,8 +58,20 @@ const displayCategories = (categories) =>{
 const displayVideos = (videos) =>{
     const videoContainer = document.getElementById('video-container')
     videoContainer.innerHTML = ''
+
+    if( videos.length === 0 ){
+        videoContainer.classList.remove('grid') 
+        videoContainer.innerHTML = `
+        <div class = 'flex flex-col justify-center items-center gap-5 h-[300px] w-96 mx-auto text-center'>
+            <img class = 'w-1/2' src = 'assets/Icon.png'/>
+            <h3 class = 'font-bold text-2xl text-center'>No Content is Available Here</h3>
+        </div>
+        `
+        return;
+    }else{
+        videoContainer.classList.add('grid')
+    }
     videos.forEach(item => {
-        // console.log(item)
     const div = document.createElement('div')
         div.innerHTML = `
         
