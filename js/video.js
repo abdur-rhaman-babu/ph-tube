@@ -21,21 +21,32 @@ const videoUrl = 'https://openapi.programming-hero.com/api/phero-tube/videos';
         .then(data => displayVideos(data.videos))
 
 
+// load category videos
+const loadCategoryVideos = (id) =>{
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+        .then(res => res.json())
+        .then(data => displayVideos(data.category))
+}
+
 // display data
 const displayCategories = (categories) =>{
     const categoryContainer = document.getElementById('categories');
     categories.forEach( item => {
-        const button = document.createElement('button')
-        button.classList.add('btn')
-        button.innerText = item.category;
-        categoryContainer.appendChild(button)
+        const buttonContainer = document.createElement('div')
+        buttonContainer.innerHTML = `
+            <button onclick = 'loadCategoryVideos(${item.category_id})' class = 'btn'>
+                ${item.category}
+            </button>
+        `
+        categoryContainer.appendChild(buttonContainer)
     });
 }
 
 const displayVideos = (videos) =>{
     const videoContainer = document.getElementById('video-container')
+    videoContainer.innerHTML = ''
     videos.forEach(item => {
-        console.log(item)
+        // console.log(item)
     const div = document.createElement('div')
         div.innerHTML = `
         
